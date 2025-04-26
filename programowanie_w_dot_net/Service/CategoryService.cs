@@ -16,12 +16,12 @@ public class CategoryService
         _context = context;
     }
     
-    public async Task<Category> CreateCategory(CategoryDto categoryDto, string userId)
+    public async Task<Category> CreateCategory(CategoryRequestDto categoryRequestDto, string userId)
     {
         var category = new Category()
         {
-            Name = categoryDto.Name,
-            UserId = int.Parse(userId)  // Convert string to int
+            Name = categoryRequestDto.Name,
+            UserId = int.Parse(userId)
         };
     
         _context.Categories.Add(category);
@@ -31,7 +31,7 @@ public class CategoryService
         return category;
     }
 
-    public async Task<List<CategoryDto>> GetAllCategories(int parsedUserId)
+    public async Task<List<CategoryGetResponseDto>> GetAllCategories(int parsedUserId)
     {
         // Retrieve categories for the specific user
         var categories = await _context.Categories
@@ -39,10 +39,10 @@ public class CategoryService
             .ToListAsync();
         
         // Map each Category to a CategoryDto
-        var categoryDtos = categories.Select(c => new CategoryDto
+        var categoryDtos = categories.Select(category => new CategoryGetResponseDto
         {
-            Id = c.Id,
-            Name = c.Name,
+            Id = category.Id,
+            Name = category.Name,
         }).ToList();
 
         return categoryDtos;

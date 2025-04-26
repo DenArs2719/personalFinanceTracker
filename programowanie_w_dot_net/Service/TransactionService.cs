@@ -24,40 +24,39 @@ public class TransactionService
         decimal? maxAmount)
     {
         var query = _context.Transactions
-            .Where(t => t.UserId == userId)
+            .Where(transaction => transaction.UserId == userId)
             .AsQueryable();
 
         // Ensure UTC for date filters
         if (dateFrom.HasValue)
         {
-            query = query.Where(t => t.Date >= dateFrom.Value.ToUniversalTime());
+            query = query.Where(transaction => transaction.Date >= dateFrom.Value.ToUniversalTime());
         }
 
         if (dateTo.HasValue)
         {
-            query = query.Where(t => t.Date <= dateTo.Value.ToUniversalTime());
+            query = query.Where(transaction => transaction.Date <= dateTo.Value.ToUniversalTime());
         }
 
         if (categoryId.HasValue)
         {
-            query = query.Where(t => t.CategoryId == categoryId.Value);
+            query = query.Where(transaction => transaction.CategoryId == categoryId.Value);
         }
 
         if (minAmount.HasValue)
         {
-            query = query.Where(t => t.Amount >= minAmount.Value);
+            query = query.Where(transaction => transaction.Amount >= minAmount.Value);
         }
 
         if (maxAmount.HasValue)
         {
-            query = query.Where(t => t.Amount <= maxAmount.Value);
+            query = query.Where(transaction => transaction.Amount <= maxAmount.Value);
         }
-
-        // Pagination
+        
         var totalItems = await query.CountAsync();
     
         var transactions = await query
-            .OrderByDescending(t => t.Date)
+            .OrderByDescending(transaction => transaction.Date)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -73,6 +72,7 @@ public class TransactionService
         }).ToList();
         
         var transactionDtoGetResponse = new TransactionDtoGetResponse(totalItems, transactionDtos);
+        
         return transactionDtoGetResponse;
     }
 }

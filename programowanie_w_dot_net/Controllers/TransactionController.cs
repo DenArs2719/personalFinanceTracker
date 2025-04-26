@@ -55,12 +55,13 @@ namespace programowanie_w_dot_net.Controllers
                 return Unauthorized();
             }
 
-            // Ensure the Date is in UTC
-            if (transactionRequestDto.Date.Kind == DateTimeKind.Unspecified) {
-                transactionRequestDto.Date = DateTime.SpecifyKind(transactionRequestDto.Date, DateTimeKind.Utc);
-            } else if (transactionRequestDto.Date.Kind == DateTimeKind.Local) {
-                transactionRequestDto.Date = transactionRequestDto.Date.ToUniversalTime();
-            }
+            transactionRequestDto.Date = transactionRequestDto.Date.Kind switch
+            {
+                // Ensure the Date is in UTC
+                DateTimeKind.Unspecified => DateTime.SpecifyKind(transactionRequestDto.Date, DateTimeKind.Utc),
+                DateTimeKind.Local => transactionRequestDto.Date.ToUniversalTime(),
+                _ => transactionRequestDto.Date
+            };
 
             var transaction = new Transaction {
                 Amount = transactionRequestDto.Amount,

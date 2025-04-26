@@ -18,7 +18,7 @@ public class CategoryController(BudgetDbContext context) : ControllerBase
 
     // GET: api/Category
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryGetResponseDto>>> GetCategories()
     {
         // Retrieve the user ID from the JWT token
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -41,7 +41,7 @@ public class CategoryController(BudgetDbContext context) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Category>> PostCategory([FromBody] CategoryDto categoryDto)
+    public async Task<ActionResult<Category>> PostCategory([FromBody] CategoryRequestDto categoryRequestDto)
     {
         // Retrieve the user ID from the JWT token
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -51,7 +51,7 @@ public class CategoryController(BudgetDbContext context) : ControllerBase
             return Unauthorized(); // If no user ID is found, return unauthorized
         }
 
-        var category = await _categoryService.CreateCategory(categoryDto, userId);
+        var category = await _categoryService.CreateCategory(categoryRequestDto, userId);
         
         return Ok(category);
     }
