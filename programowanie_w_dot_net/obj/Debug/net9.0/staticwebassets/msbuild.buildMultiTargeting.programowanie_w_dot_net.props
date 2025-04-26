@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\programowanie_w_dot_net.props" />
+</Project>
