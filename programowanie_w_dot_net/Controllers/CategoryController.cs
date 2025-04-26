@@ -18,7 +18,7 @@ public class CategoryController(BudgetDbContext context) : ControllerBase
 
     // GET: api/Category
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
     {
         // Retrieve the user ID from the JWT token
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

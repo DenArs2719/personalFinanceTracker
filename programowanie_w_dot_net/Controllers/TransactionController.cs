@@ -11,15 +11,8 @@ namespace programowanie_w_dot_net.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TransactionController : ControllerBase
+    public class TransactionController(BudgetDbContext context) : ControllerBase
     {
-        private readonly BudgetDbContext _context;
-
-        public TransactionController(BudgetDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -37,7 +30,7 @@ namespace programowanie_w_dot_net.Controllers
                 return Unauthorized();
             }
 
-            var query = _context.Transactions
+            var query = context.Transactions
                 .Where(t => t.UserId == int.Parse(userId))
                 .AsQueryable();
 
@@ -104,9 +97,9 @@ namespace programowanie_w_dot_net.Controllers
                 UserId = int.Parse(userId)  // Convert string to int
             };
 
-            _context.Transactions.Add(transaction);
+            context.Transactions.Add(transaction);
             
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return Ok(transaction);
         }
@@ -121,7 +114,7 @@ namespace programowanie_w_dot_net.Controllers
                 return Unauthorized();
             }
 
-            var transaction = await _context.Transactions
+            var transaction = await context.Transactions
                 .Where(t => t.Id == id && t.UserId == int.Parse(userId))
                 .FirstOrDefaultAsync();
 
@@ -134,7 +127,7 @@ namespace programowanie_w_dot_net.Controllers
             transaction.Date = transactionUpdateDto.Date;
             transaction.CategoryId = transactionUpdateDto.CategoryId;
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -150,7 +143,7 @@ namespace programowanie_w_dot_net.Controllers
             }
             
             // Fetch transactions for the current user
-            var transaction = await _context.Transactions
+            var transaction = await context.Transactions
                 .Where(t => t.UserId == int.Parse(userId)) // Filter by UserId
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
@@ -160,9 +153,9 @@ namespace programowanie_w_dot_net.Controllers
                 return NotFound();
             }
 
-            _context.Transactions.Remove(transaction);
+            context.Transactions.Remove(transaction);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -31,14 +31,21 @@ public class CategoryService
         return category;
     }
 
-    public async Task<List<Category>> GetAllCategories(int parsedUserId)
+    public async Task<List<CategoryDto>> GetAllCategories(int parsedUserId)
     {
         // Retrieve categories for the specific user
         var categories = await _context.Categories
             .Where(c => c.UserId == parsedUserId)
             .ToListAsync();
+        
+        // Map each Category to a CategoryDto
+        var categoryDtos = categories.Select(c => new CategoryDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+        }).ToList();
 
-        return categories;
+        return categoryDtos;
     }
 
     public async Task<Category?> GetCategoryById(int id)
