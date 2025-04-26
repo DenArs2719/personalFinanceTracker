@@ -41,10 +41,12 @@ public class AuthController : ControllerBase
         if (await _context.Users.AnyAsync(u => u.Login == request.Email))
             return BadRequest("User already exists");
 
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         var user = new User { Login = request.Email, PasswordHash = passwordHash };
+      
         _context.Users.Add(user);
+       
         await _context.SaveChangesAsync();
 
         return Ok("User created");
