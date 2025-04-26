@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj": {}
+    "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj": {}
   },
   "projects": {
-    "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj": {
+    "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
+        "projectUniqueName": "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
         "projectName": "programowanie_w_dot_net",
-        "projectPath": "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
+        "projectPath": "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
         "packagesPath": "C:\\Users\\yevse\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\obj\\",
+        "outputPath": "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yevse\\AppData\\Roaming\\NuGet\\NuGet.Config"

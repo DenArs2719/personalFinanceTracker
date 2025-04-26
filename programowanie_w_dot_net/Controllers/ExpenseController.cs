@@ -4,22 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using programowanie_w_dot_net.Data;
 using Microsoft.AspNetCore.Authorization;
 using programowanie_w_dot_net.Dto;
+using programowanie_w_dot_net.Service;
 
 namespace programowanie_w_dot_net.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class ExpenseController : ControllerBase
+public class ExpenseController(BudgetDbContext context) : ControllerBase
 {
-    private readonly BudgetDbContext _context;
-    
-    public ExpenseController(BudgetDbContext context)
-    {
-        _context = context;
-    }
-    
-    
+    private readonly ExpenseService _expenseService = new(context);
+
     [HttpGet]
     public async Task<IActionResult> GetExpenseSummary()
     {
@@ -35,15 +30,7 @@ public class ExpenseController : ControllerBase
             return Unauthorized();
         }
 
-        var summary = await _context.Transactions
-            .Where(t => t.UserId == parsedUserId)
-            .GroupBy(t => t.Category.Name)
-            .Select(g => new SummaryDto
-            {
-                CategoryName = g.Key,
-                TotalAmount = g.Sum(t => t.Amount)
-            })
-            .ToListAsync();
+        var summary = await _expenseService.GetExpenseSummary(parsedUserId);
 
         return Ok(summary);
     }

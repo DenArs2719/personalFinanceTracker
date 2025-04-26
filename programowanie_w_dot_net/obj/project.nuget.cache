@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U/G9j4iv33I=",
+  "dgSpecHash": "0/3Smz4fEzs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\yevse\\RiderProjects\\programowanie_w_dot_net\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
+  "projectFilePath": "C:\\Users\\yevse\\Desktop\\Workspace\\personalFinanceTracker\\programowanie_w_dot_net\\programowanie_w_dot_net.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yevse\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\yevse\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",

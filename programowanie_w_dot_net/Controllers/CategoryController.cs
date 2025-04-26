@@ -12,15 +12,10 @@ namespace programowanie_w_dot_net.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class CategoryController : ControllerBase
+public class CategoryController(BudgetDbContext context) : ControllerBase
 {
-    private readonly CategoryService _categoryService;
+    private readonly CategoryService _categoryService = new(context);
 
-    public CategoryController(BudgetDbContext context)
-    {
-        _categoryService = new CategoryService(context);
-    }
-    
     // GET: api/Category
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
