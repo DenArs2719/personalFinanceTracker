@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using programowanie_w_dot_net.Data;
 using programowanie_w_dot_net.Dto;
 using programowanie_w_dot_net.Models;
+using programowanie_w_dot_net.Service;
 
 namespace programowanie_w_dot_net.Controllers
 {
@@ -13,7 +14,8 @@ namespace programowanie_w_dot_net.Controllers
     [Authorize]
     public class TransactionController(BudgetDbContext context) : ControllerBase
     {
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
+        private readonly TransactionService _transactionService = new(context);
+        public async Task<ActionResult<IEnumerable<TransactionDtoGetResponse>>> GetTransactions(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] DateTime? dateFrom = null,
@@ -30,49 +32,19 @@ namespace programowanie_w_dot_net.Controllers
                 return Unauthorized();
             }
 
-            var query = context.Transactions
-                .Where(t => t.UserId == int.Parse(userId))
-                .AsQueryable();
-
-            // Ensure UTC for date filters
-            if (dateFrom.HasValue)
-            {
-                query = query.Where(t => t.Date >= dateFrom.Value.ToUniversalTime());
-            }
-
-            if (dateTo.HasValue)
-            {
-                query = query.Where(t => t.Date <= dateTo.Value.ToUniversalTime());
-            }
-
-            if (categoryId.HasValue)
-            {
-                query = query.Where(t => t.CategoryId == categoryId.Value);
-            }
-
-            if (minAmount.HasValue)
-            {
-                query = query.Where(t => t.Amount >= minAmount.Value);
-            }
-
-            if (maxAmount.HasValue)
-            {
-                query = query.Where(t => t.Amount <= maxAmount.Value);
-            }
-
-            // Pagination
-            var totalItems = await query.CountAsync();
-    
-            var transactions = await query
-                .OrderByDescending(t => t.Date)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-    
-            return Ok(new {
-                totalItems,
-                transactions
-            });
+            var transactionDtos = await _transactionService.GetTransactionsAsync(
+                int.Parse(userId),
+                page,
+                pageSize,
+                dateFrom,
+                dateTo,
+                categoryId,
+                minAmount,
+                maxAmount
+            );
+            
+            System.Console.WriteLine("transactionDtos" + transactionDtos.Transactions);
+            return Ok(transactionDtos);
         }
         
         [HttpPost]
