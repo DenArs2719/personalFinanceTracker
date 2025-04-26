@@ -1,6 +1,6 @@
 ﻿namespace programowanie_w_dot_net.Dto;
 
-public class TransactionDto
+public class TransactionRequestDto
 {
     public int Id { get; set; }
     public decimal Amount { get; set; }

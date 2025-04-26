@@ -48,7 +48,7 @@ namespace programowanie_w_dot_net.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostTransaction([FromBody] TransactionDto transactionDto) {
+        public async Task<IActionResult> PostTransaction([FromBody] TransactionRequestDto transactionRequestDto) {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null) {
@@ -56,17 +56,17 @@ namespace programowanie_w_dot_net.Controllers
             }
 
             // Ensure the Date is in UTC
-            if (transactionDto.Date.Kind == DateTimeKind.Unspecified) {
-                transactionDto.Date = DateTime.SpecifyKind(transactionDto.Date, DateTimeKind.Utc);
-            } else if (transactionDto.Date.Kind == DateTimeKind.Local) {
-                transactionDto.Date = transactionDto.Date.ToUniversalTime();
+            if (transactionRequestDto.Date.Kind == DateTimeKind.Unspecified) {
+                transactionRequestDto.Date = DateTime.SpecifyKind(transactionRequestDto.Date, DateTimeKind.Utc);
+            } else if (transactionRequestDto.Date.Kind == DateTimeKind.Local) {
+                transactionRequestDto.Date = transactionRequestDto.Date.ToUniversalTime();
             }
 
             var transaction = new Transaction {
-                Amount = transactionDto.Amount,
-                CategoryId = transactionDto.CategoryId,
-                Date = transactionDto.Date,  // Now it's guaranteed to be in UTC
-                UserId = int.Parse(userId)  // Convert string to int
+                Amount = transactionRequestDto.Amount,
+                CategoryId = transactionRequestDto.CategoryId,
+                Date = transactionRequestDto.Date, 
+                UserId = int.Parse(userId)
             };
 
             context.Transactions.Add(transaction);

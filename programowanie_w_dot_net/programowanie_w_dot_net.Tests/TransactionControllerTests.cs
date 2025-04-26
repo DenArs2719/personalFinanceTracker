@@ -65,7 +65,7 @@ namespace BudgetApp.Tests
             var context = GetInMemoryDbContext();
             var controller = GetControllerWithUser(context, "2");
 
-            var dto = new TransactionDto
+            var dto = new TransactionRequestDto
             {
                 Amount = 200,
                 CategoryId = 1,
