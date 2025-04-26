@@ -55,24 +55,7 @@ namespace programowanie_w_dot_net.Controllers
                 return Unauthorized();
             }
 
-            transactionRequestDto.Date = transactionRequestDto.Date.Kind switch
-            {
-                // Ensure the Date is in UTC
-                DateTimeKind.Unspecified => DateTime.SpecifyKind(transactionRequestDto.Date, DateTimeKind.Utc),
-                DateTimeKind.Local => transactionRequestDto.Date.ToUniversalTime(),
-                _ => transactionRequestDto.Date
-            };
-
-            var transaction = new Transaction {
-                Amount = transactionRequestDto.Amount,
-                CategoryId = transactionRequestDto.CategoryId,
-                Date = transactionRequestDto.Date, 
-                UserId = int.Parse(userId)
-            };
-
-            context.Transactions.Add(transaction);
-            
-            await context.SaveChangesAsync();
+            var transaction = await _transactionService.CreateTransactionAsync(transactionRequestDto, userId);
 
             return Ok(transaction);
         }

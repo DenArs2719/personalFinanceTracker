@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using programowanie_w_dot_net.Data;
 using programowanie_w_dot_net.Dto;
+using programowanie_w_dot_net.Models;
 
 namespace programowanie_w_dot_net.Service;
 
@@ -74,5 +75,30 @@ public class TransactionService
         var transactionDtoGetResponse = new TransactionDtoGetResponse(totalItems, transactionDtos);
         
         return transactionDtoGetResponse;
+    }
+    
+    public async Task<Transaction> CreateTransactionAsync(TransactionRequestDto transactionRequestDto, string userId)
+    {
+        // Ensure the Date is in UTC
+        var normalizedDate = transactionRequestDto.Date.Kind switch
+        {
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(transactionRequestDto.Date, DateTimeKind.Utc),
+            DateTimeKind.Local => transactionRequestDto.Date.ToUniversalTime(),
+            _ => transactionRequestDto.Date
+        };
+
+        var transaction = new Transaction
+        {
+            Amount = transactionRequestDto.Amount,
+            CategoryId = transactionRequestDto.CategoryId,
+            Date = normalizedDate,
+            UserId = int.Parse(userId)
+        };
+
+        _context.Transactions.Add(transaction);
+        
+        await _context.SaveChangesAsync();
+
+        return transaction;
     }
 }
