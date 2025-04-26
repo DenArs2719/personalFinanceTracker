@@ -9,17 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Configure CORS policy to allow any origin, method, and header
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", policy =>
     {
-        policy.AllowAnyOrigin()  // Allow all origins
-            .AllowAnyMethod()  // Allow all methods (GET, POST, PUT, DELETE)
-            .AllowAnyHeader(); // Allow all headers
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
-// Add DbContext with PostgreSQL
+// Add DbContext for PostgreSQL database
 builder.Services.AddDbContext<BudgetDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -29,18 +30,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
+            ValidateIssuer = true, // Validate the token issuer
+            ValidateAudience = true, // Validate the token audience
+            ValidateLifetime = true, // Validate the token expiration
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], // Expected issuer
+            ValidAudience = builder.Configuration["Jwt:Audience"], // Expected audience
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])) // Key for signature validation
         };
     });
 
+// Add controller support
 builder.Services.AddControllers();
 
-// Add Swagger
+// Configure Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -49,29 +51,31 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Enable Swagger middleware
+// Configure the HTTP request pipeline
+
+// Enable Swagger middleware for API documentation
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-    c.RoutePrefix = string.Empty; // Open Swagger at the root URL (https://localhost:5001/)
+    c.RoutePrefix = string.Empty; // Serve Swagger UI at application root (e.g., https://localhost:5001/)
 });
 
-// 1. Статические файлы (если нужно)
+// 1. Serve static files (if needed)
 app.UseStaticFiles();
 
-// 2. CORS (если нужно, обычно до маршрутизации)
+// 2. Enable CORS (should be placed before routing)
 app.UseCors("AllowAllOrigins");
 
-// 3. Routing — сначала, перед аутентификацией и авторизацией
+// 3. Enable routing (should come before authentication and authorization)
 app.UseRouting();
 
-// 4. Аутентификация и авторизация — после маршрутизации
+// 4. Enable authentication and authorization (should come after routing)
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 5. Маппинг контроллеров
+// 5. Map controller routes
 app.MapControllers();
 
-// Запуск приложения
+// Start the application
 app.Run();
