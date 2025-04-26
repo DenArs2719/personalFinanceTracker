@@ -15,6 +15,7 @@ namespace programowanie_w_dot_net.Controllers
     public class TransactionController(BudgetDbContext context) : ControllerBase
     {
         private readonly TransactionService _transactionService = new(context);
+        
         public async Task<ActionResult<IEnumerable<TransactionDtoGetResponse>>> GetTransactions(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
