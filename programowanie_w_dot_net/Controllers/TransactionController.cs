@@ -43,7 +43,6 @@ namespace programowanie_w_dot_net.Controllers
                 maxAmount
             );
             
-            System.Console.WriteLine("transactionDtos" + transactionDtos.Transactions);
             return Ok(transactionDtos);
         }
         
