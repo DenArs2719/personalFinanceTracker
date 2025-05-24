@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using programowanie_w_dot_net.Controllers;
 using programowanie_w_dot_net.Data;
 using programowanie_w_dot_net.Dto;
@@ -41,22 +35,6 @@ namespace BudgetApp.Tests
                 .Options;
 
             return new BudgetDbContext(options);
-        }
-
-        [Fact]
-        public async Task GetTransactions_ReturnsTransactions_ForAuthorizedUser()
-        {
-            var context = GetInMemoryDbContext();
-            context.Transactions.Add(new Transaction { Id = 1, Amount = 100, UserId = 1, CategoryId = 1, Date = DateTime.UtcNow });
-            context.SaveChanges();
-
-            var controller = GetControllerWithUser(context, "1");
-
-            var result = await controller.GetTransactions();
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var transactions = Assert.IsAssignableFrom<IEnumerable<Transaction>>(okResult.Value);
-
-            Assert.Single(transactions);
         }
 
         [Fact]

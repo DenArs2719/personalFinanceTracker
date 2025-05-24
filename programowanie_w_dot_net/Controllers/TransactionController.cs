@@ -51,7 +51,8 @@ namespace programowanie_w_dot_net.Controllers
         public async Task<IActionResult> PostTransaction([FromBody] TransactionRequestDto transactionRequestDto) {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null) {
+            if (userId == null)
+            {
                 return Unauthorized();
             }
 
